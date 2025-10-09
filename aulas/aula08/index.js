@@ -61,7 +61,7 @@ async function main() {
             const nome = readline.question("Informe o nome da terfa: ");
             const nomeAtual = readline.question("Informe outro nome para a tarefa: ");
             const concluidaAtual = readline.question("Informe outra situacao da tarefa: ");
-            await buscar(nome, nomeAtual, concluidaAtual);
+            await alterar(nome, nomeAtual, concluidaAtual);
             break;
         };
         case '4' : {
