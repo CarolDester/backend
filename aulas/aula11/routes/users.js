@@ -1,13 +1,23 @@
 const express = require("express");
-const { gerarToken, verificarToken } = require("../middlewares/auth");
+const { gerarToken, verificarToken, cifrarSenha, compararSenha } = require("../middlewares/auth");
+const Usuario = require("../models/userModel");
 
 const router = express.Router();
 
-router.post("/login", function (req, res, next) {
-  const { username, password } = req.body;
+router.post("/", async (req, res) => {
+  const {username, password} = req.body;
+  const novoUsuario = await Usuario.create({ username, password: cifrarSenha(password) });
+  res.status(201).json(novoUsuario);
+})
 
+router.post("/login", async function (req, res, next) {
+  const { username, password } = req.body;
+  const usuarioEncontrado = await Usuario.findOne({
+    username,
+    password: cifrarSenha(password)
+  });
   // simular uma autenticacao
-  if (username === "carol@iesb.br" && password === "abcd1234") {
+  if (usuarioEncontrado && compararSenha(password, usuarioEncontrado.password)) {
     const payload = {
       iss: "Minha API",
       email: username,
